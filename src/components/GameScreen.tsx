@@ -7,6 +7,8 @@ interface GameScreenProps {
   hasBingo: boolean;
   onSquareClick: (squareId: number) => void;
   onReset: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 export function GameScreen({
@@ -15,35 +17,47 @@ export function GameScreen({
   hasBingo,
   onSquareClick,
   onReset,
+  theme,
+  onToggleTheme,
 }: GameScreenProps) {
   return (
-    <div className="flex flex-col min-h-full bg-gray-50">
+    <div className="relative flex flex-col min-h-full bg-app-bg text-text overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 opacity-40">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgb(214_182_105/20%),transparent_45%)]" />
+      </div>
+
       {/* Header */}
-      <header className="flex items-center justify-between p-3 bg-white border-b border-gray-200">
+      <header className="relative flex items-center justify-between p-3 bg-surface/90 border-b border-border backdrop-blur-sm">
         <button
           onClick={onReset}
-          className="text-gray-500 text-sm px-3 py-1.5 rounded active:bg-gray-100"
+          className="text-muted text-sm px-3 py-1.5 rounded-lg border border-transparent hover:border-border hover:text-text active:bg-soft transition-colors"
         >
           ← Back
         </button>
-        <h1 className="font-bold text-gray-900">Bingo Mixer</h1>
-        <div className="w-16"></div>
+        <h1 className="font-bold text-text text-xl tracking-[0.08em]">Bingo Mixer</h1>
+        <button
+          onClick={onToggleTheme}
+          className="text-xs uppercase tracking-[0.18em] px-2.5 py-1.5 rounded-lg bg-card border border-border text-muted hover:text-text hover:border-accent-light transition-colors"
+          aria-label="Toggle color theme"
+        >
+          {theme === 'dark' ? 'Light' : 'Dark'}
+        </button>
       </header>
 
       {/* Instructions */}
-      <p className="text-center text-gray-500 text-sm py-2 px-4">
+      <p className="text-center text-muted text-sm py-2 px-4">
         Tap a square when you find someone who matches it.
       </p>
 
       {/* Bingo indicator */}
       {hasBingo && (
-        <div className="bg-amber-100 text-amber-800 text-center py-2 font-semibold text-sm">
+        <div className="bg-bingo/22 border-y border-bingo/45 text-bingo text-center py-2 font-semibold text-sm tracking-[0.09em] animate-[pulse_1.6s_ease-in-out_infinite]">
           🎉 BINGO! You got a line!
         </div>
       )}
 
       {/* Board */}
-      <div className="flex-1 flex items-center justify-center p-3">
+      <div className="relative flex-1 flex items-center justify-center p-3">
         <BingoBoard
           board={board}
           winningSquareIds={winningSquareIds}
